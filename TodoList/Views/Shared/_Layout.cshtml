@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Todo List</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.3.js"></script>
+    <script>
+    $(function () {
+        $('.TodoFlag').change(function () {
+            var data = {
+                pid: $(this).attr('pid'),
+                isChecked: $(this).is(':checked')
+            };
+
+            $.ajax({
+                url: '@Url.Action("TodoFlagChanged", "Todo")',
+                type: 'POST',
+                data: data,
+                async: true,
+                success: function (view) {
+                    $('#main').html(view);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Something error,Try again!');
+                }
+            });
+        });
+
+        $('.title').click(function () {
+            var data = {
+                sortOrder: $(this).attr('sortOrder')
+            };
+
+            $.ajax({
+                url: '@Url.Action("Sort", "Todo")',
+                type: 'POST',
+                data: data,
+                async: true,
+                success: function (view) {
+                    $('#main').html(view);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Something error,Try again!');
+                }
+            });
+        });
+    });
+
+    function deleteTodo(pid) {
+        var isDelete = confirm('Are you sure you want to delete this?');
+        if (!isDelete) {
+            return false;
+        }
+        else {
+            var data = {
+                pid: pid
+            };
+            $.ajax({
+                url: '@Url.Action("DeleteConfirmed", "Todo")',
+                    type: 'POST',
+                    data: data,
+                    async: true,
+                    success: function (view) {
+                        $('#main').html(view);
+                        alert('Success');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Something error,Try again!');
+                    }
+                });
+            }
+        }
+
+        function queryContent() {
+          
+            var data = {
+                queryStr: $('#queryStr').val()
+                };
+                $.ajax({
+                    url: '@Url.Action("QueryContent", "Todo")',
+                    type: 'POST',
+                    data: data,
+                    async: true,
+                    success: function (view) {
+                        $('#main').html(view);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Something error,Try again!');
+                    }
+                });
+        }
+        function sort() {
+
+            var data = {
+                sortOrder: $(this).attr('sortOrder')
+            };
+            $.ajax({
+                url: '@Url.Action("Sort", "Todo")',
+                type: 'POST',
+                data: data,
+                async:true,
+                success: function (view) {
+                    $('#main').html(view);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Something error,Try again!');
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                @Html.Label("Welcome to Todo List", new { @class = "navbar-brand" })
+            </div>
+        </div>
+    </div>
+    <div class="container body-content" id="main">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

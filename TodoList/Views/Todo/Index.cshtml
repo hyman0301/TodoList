@@ -1,0 +1,73 @@
+﻿@model IEnumerable<TodoList.Models.Todo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Todo List</h2>
+
+<p>
+    <input type="text" id="queryStr" placeholder="Query Content..." ><button onclick="queryContent()">Query</button>    
+    
+</p>
+<p>
+@Html.ActionLink("Add new todo...", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Done
+        </th>
+        <th>            <a href="" class="title" sortOrder="@ViewBag.ContentSort">Content</a>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>           <a href="" class="title" sortorder="@ViewBag.DueTimeSort">DueTime</a>
+            @Html.DisplayNameFor(model => model.DueTime)
+        </th>
+        <th><a href="" class="title" sortorder="@ViewBag.PrioritySort">Priority</a>
+            @Html.DisplayNameFor(model => model.Priority)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.CheckBoxFor(modelItem => item.TodoFlag, new { pid = item.Id, @class = "TodoFlag" })
+            </td>
+            @if (item.TodoFlag)
+            {
+                <td style="text-decoration:line-through">
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td style="text-decoration:line-through">
+                    @Html.DisplayFor(modelItem => item.DueTime)
+                </td>
+                <td style="text-decoration:line-through">
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td>
+                    <a href="" onclick="deleteTodo(@item.Id)">Delete</a>
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                    <a href="" onclick="deleteTodo(@item.Id)">Delete</a>
+                </td>
+            }
+        </tr>
+    }
+
+</table>
